@@ -7,7 +7,7 @@
 
   $encode_option = "1";
   $decode_option = "2";
-  $result_message = '';
+  $result_message = "";
 
   $alphabet = [
     '0' => 'a',
@@ -35,8 +35,7 @@
     '22' => 'w',
     '23' => 'x',
     '24' => 'y',
-    '25' => 'z',
-    '26' => ' '];
+    '25' => 'z'];
 
   if (strcmp($option, $encode_option) !== 0 && strcmp($option, $decode_option) !== 0) {
     echo "Las opciones validas son " . $encode_option . " (cifrar) y " . $decode_option . " (descifrar).";
@@ -53,28 +52,83 @@
     echo "Descifrado en proceso...";
     echo "<br>";
     echo "<br>";
-    decode($offset, $message);
+    decode($alphabet, $offset, $message);
   }
 
   function encode($alphabet, $offset, $message) {
     displayInputData($offset, $message);
 
-    $array_message = str_split($message);
+    /* Obtiene un arreglo de caracteres pertenecientes al mensaje */
+    $array_message = get_array_message($message);
+
     $alphabet_size = count($alphabet);
     $index;
 
     foreach ($array_message as $key => $current_char) {
-      /* Obtiene el indice, en el alfabeto, de un caracter del mensaje */
-      $index = getIndex($alphabet, $current_char);
 
-      /* Calcula el valor de la posicion del caracter de cifrado
-      correspondiente al caracter actualmente recorrido */
-      $index = ($index + $offset) % $alphabet_size;
+      /* Si el caracter actualmente recorrido del mensaje no es un espacio,
+      calcula el caracter de cifrado */
+      if ($current_char !== " ") {
+        /* Obtiene el indice, en el alfabeto, de un caracter no cifrado del mensaje */
+        $index = getIndex($alphabet, $current_char);
 
-      $result_message .= $alphabet[$index];
+        /* Calcula el valor de la posicion del caracter de cifrado
+        correspondiente al caracter actualmente recorrido */
+        $index = ($index + $offset) % $alphabet_size;
+
+        /* Agrega el caracter cifrado al resultado */
+        $result_message .= $alphabet[$index];
+      }
+
+      /* Si el caracter actualmente recorrido del mensaje es un espacio,
+      agrega un espacio al resultado */
+      if ($current_char == " ") {
+        $result_message .= " ";
+      }
+
     }
 
     echo "Mensaje cifrado: " . $result_message;
+  }
+
+  function decode($alphabet, $offset, $message) {
+    displayInputData($offset, $message);
+
+    /* Obtiene un arreglo de caracteres pertenecientes al mensaje */
+    $array_message = get_array_message($message);
+
+    $alphabet_size = count($alphabet);
+    $index;
+
+    foreach ($array_message as $key => $current_char) {
+
+      /* Si el caracter actualmente recorrido del mensaje no es un espacio,
+      calcula el caracter de descifrado */
+      if ($current_char !== " ") {
+        /* Obtiene el indice, en el alfabeto, de un caracter cifrado del mensaje */
+        $index = getIndex($alphabet, $current_char);
+
+        /* Calcula el valor de la posicion del caracter de descifrado
+        correspondiente al caracter actualmente recorrido */
+        if ($index - $offset < 0) {
+          $index = $alphabet_size + ($index - $offset);
+        } else {
+          $index = ($index - $offset) % $alphabet_size;
+        }
+
+        /* Agrega el caracter descifrado al resultado */
+        $result_message .= $alphabet[$index];
+      }
+
+      /* Si el caracter actualmente recorrido es un espacio, agrega un espacio
+      al resultado */
+      if ($current_char == " ") {
+        $result_message .= " ";
+      }
+
+    }
+
+    echo "Mensaje descifrado: " . $result_message;
   }
 
   function displayInputData($offset, $message) {
@@ -98,6 +152,11 @@
       next($given_array);
     }
 
+  }
+
+  /* Retorna el mensaje convertido en arreglo */
+  function get_array_message($message) {
+    return str_split($message);
   }
 
 ?>
