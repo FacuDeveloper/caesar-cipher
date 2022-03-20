@@ -38,20 +38,24 @@
     '25' => 'z'];
 
   if (strcmp($option, $encode_option) !== 0 && strcmp($option, $decode_option) !== 0) {
-    echo "Las opciones validas son " . $encode_option . " (cifrar) y " . $decode_option . " (descifrar).";
+    exit ("Las opciones validas son " . $encode_option . " (cifrar) y " . $decode_option . " (descifrar).");
   }
 
+  if ($offset <= 0) {
+    exit("El desplazamiento debe ser mayor a cero.");
+  }
+
+  if (empty($message)) {
+    exit("El mensaje no debe estar vacio.");
+  }
+
+  /* Si la opcion ingresada es 1, se ejecuta la codificacion Cesar */
   if (strcmp($option, $encode_option) == 0) {
-    echo "Cifrado en proceso...";
-    echo "<br>";
-    echo "<br>";
     encode($alphabet, $offset, $message);
   }
 
+  /* Si la opcion ingresada es 2, se ejecuta el descifrado Cesar */
   if (strcmp($option, $decode_option) == 0) {
-    echo "Descifrado en proceso...";
-    echo "<br>";
-    echo "<br>";
     decode($alphabet, $offset, $message);
   }
 
