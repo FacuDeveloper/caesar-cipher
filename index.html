@@ -2,9 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
   <body>
-    <form method="post" action="app.php">
+    <form>
       <div>
         <label for="option">Opcion: 1 (cifrar), 2 (descifrar)</label>
         <input type="number" name="option" id="option">
@@ -12,16 +13,44 @@
 
       <div>
         <label for="offset">Clave</label>
-        <input type="number" name="offset">
+        <input type="number" name="offset" id="offset">
       </div>
 
       <div class="">
-        <textarea name="message" rows="8" cols="80"></textarea>
+        <textarea name="message" rows="8" cols="80" id="message"></textarea>
       </div>
 
       <div>
-        <button>Enviar</button>
+        <input type="button" value="Calcular" onclick="calculate();">
+      </div>
+
+      <div>
+        <textarea rows="8" cols="45" disabled="disabled" id="display_result"></textarea>
       </div>
     </form>
+
+    <script>
+    function calculate()
+      {
+        var parameters =
+        {
+          "option" : document.getElementById("option").value,
+          "offset" : document.getElementById("offset").value,
+          "message" : document.getElementById("message").value
+        };
+
+        $.ajax({
+          data: parameters,
+          url: 'app.php',
+          type: 'POST',
+
+          success: function(mensaje)
+          {
+            $('#display_result').html(mensaje);
+          }
+        });
+      }
+    </script>
+
   </body>
 </html>

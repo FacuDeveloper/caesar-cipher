@@ -60,8 +60,6 @@
   }
 
   function encode($alphabet, $offset, $message) {
-    displayInputData($offset, $message);
-
     /* Obtiene un arreglo de caracteres pertenecientes al mensaje */
     $array_message = get_array_message($message);
 
@@ -92,12 +90,10 @@
 
     }
 
-    echo "Mensaje cifrado: " . $result_message;
+    echo $result_message;
   }
 
   function decode($alphabet, $offset, $message) {
-    displayInputData($offset, $message);
-
     /* Obtiene un arreglo de caracteres pertenecientes al mensaje */
     $array_message = get_array_message($message);
 
@@ -132,14 +128,7 @@
 
     }
 
-    echo "Mensaje descifrado: " . $result_message;
-  }
-
-  function displayInputData($offset, $message) {
-    echo "Clave: " . $offset;
-    echo "<br>";
-    echo "Mensaje: " . $message;
-    echo "<br>";
+    echo $result_message;
   }
 
   /* Obtiene el valor de la posicion de un caracter dentro de un mapa implementado con un arreglo */
