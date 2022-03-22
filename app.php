@@ -49,7 +49,12 @@
     exit("El mensaje no debe estar vacio.");
   }
 
-  /* Si la opcion ingresada es 1, se ejecuta la codificacion Cesar */
+  /* Comprueba que el mensaje de entrada solo contenga letras en minuscula y espacios en blanco */
+  if (!preg_match("/^[a-z\s]+$/", $message)) {
+    exit("No se permiten letras mayusculas, caracteres numericos, caracteres de puntuacion ni caracteres especiales (tilde, dieresis, arroba, etc.). Solo se permiten letras minusculas y espacios en blanco. La letra ñ no esta permitida.");
+  }
+
+  /* Si la opcion ingresada es 1, se ejecuta el cifrado Cesar */
   if (strcmp($option, $encode_option) == 0) {
     encode($alphabet, $offset, $message);
   }
