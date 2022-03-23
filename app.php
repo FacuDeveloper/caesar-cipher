@@ -7,7 +7,6 @@
 
   $encode_option = "1";
   $decode_option = "2";
-  $result_message = "";
 
   $alphabet = [
     '0' => 'a',
@@ -49,26 +48,36 @@
     exit("El mensaje no debe estar vacio.");
   }
 
-  /* Comprueba que el mensaje de entrada solo contenga letras en minuscula y espacios en blanco */
+  // Comprueba que el mensaje de entrada solo contenga letras en minuscula y espacios en blanco
   if (!preg_match("/^[a-z\s]+$/", $message)) {
     exit("No se permiten letras mayusculas, caracteres numericos, caracteres de puntuacion ni caracteres especiales (tilde, dieresis, arroba, etc.). Solo se permiten letras minusculas y espacios en blanco. La letra ñ no esta permitida.");
   }
 
-  /* Si la opcion ingresada es 1, se ejecuta el cifrado Cesar */
+  // Si la opcion ingresada es 1, se ejecuta el cifrado Cesar
   if (strcmp($option, $encode_option) == 0) {
-    encode($alphabet, $offset, $message);
+    // La funcion trim() elimina los espacios en blanco del principio y el final de un string
+    encode($alphabet, $offset, trim($message));
   }
 
-  /* Si la opcion ingresada es 2, se ejecuta el descifrado Cesar */
+  // Si la opcion ingresada es 2, se ejecuta el descifrado Cesar
   if (strcmp($option, $decode_option) == 0) {
-    decode($alphabet, $offset, $message);
+    // La funcion trim() elimina los espacios en blanco del principio y el final de un string
+    decode($alphabet, $offset, trim($message));
   }
 
+  /**
+  * Realiza el cifrado Cesar del mensaje de entrada
+  *
+  * @param array $alphabet
+  * @param integer $offset clave (desplazamiento)
+  * @param string $message mensaje de entrada
+  */
   function encode($alphabet, $offset, $message) {
-    /* Obtiene un arreglo de caracteres pertenecientes al mensaje */
-    $array_message = get_array_message($message);
+    // Obtiene un arreglo de caracteres pertenecientes al mensaje de entrada
+    $array_message = getCharsMessageArray($message);
 
     $alphabet_size = count($alphabet);
+    $encrypted_message;
     $index;
 
     foreach ($array_message as $key => $current_char) {
@@ -83,26 +92,34 @@
         correspondiente al caracter actualmente recorrido */
         $index = ($index + $offset) % $alphabet_size;
 
-        /* Agrega el caracter cifrado al resultado */
-        $result_message .= $alphabet[$index];
+        // Agrega el caracter cifrado al resultado
+        $encrypted_message .= $alphabet[$index];
       }
 
       /* Si el caracter actualmente recorrido del mensaje es un espacio,
       agrega un espacio al resultado */
       if ($current_char == " ") {
-        $result_message .= " ";
+        $encrypted_message .= " ";
       }
 
     }
 
-    echo $result_message;
+    echo $encrypted_message;
   }
 
+  /**
+  * Realiza el descifrado Cesar del mensaje de entrada
+  *
+  * @param array $alphabet
+  * @param integer $offset clave (desplazamiento)
+  * @param string $message mensaje de entrada
+  */
   function decode($alphabet, $offset, $message) {
-    /* Obtiene un arreglo de caracteres pertenecientes al mensaje */
-    $array_message = get_array_message($message);
+    // Obtiene un arreglo de caracteres pertenecientes al mensaje de entrada
+    $array_message = getCharsMessageArray($message);
 
     $alphabet_size = count($alphabet);
+    $decrypted_message;
     $index;
 
     foreach ($array_message as $key => $current_char) {
@@ -121,39 +138,51 @@
           $index = ($index - $offset) % $alphabet_size;
         }
 
-        /* Agrega el caracter descifrado al resultado */
-        $result_message .= $alphabet[$index];
+        // Agrega el caracter descifrado al resultado
+        $decrypted_message .= $alphabet[$index];
       }
 
       /* Si el caracter actualmente recorrido es un espacio, agrega un espacio
       al resultado */
       if ($current_char == " ") {
-        $result_message .= " ";
+        $decrypted_message .= " ";
       }
 
     }
 
-    echo $result_message;
+    echo $decrypted_message;
   }
 
-  /* Obtiene el valor de la posicion de un caracter dentro de un mapa implementado con un arreglo */
-  function getIndex($given_array, $char_message) {
+  /**
+  * Obtiene el valor que tiene la posicion de un caracter en el alfabeto
+  *
+  * @param array $alphabet
+  * @param char $char_message un caracter del mensaje de entrada
+  * @return integer el valor que tiene la posicion de un caracter del mensaje
+  * de entrada en el alfabeto
+  */
+  function getIndex($alphabet, $char_message) {
 
-    while ($current_char = current($given_array)) {
+    while ($current_char = current($alphabet)) {
 
-      /* Si el caracter de la posicon actual del arreglo es igual al caracter del mensaje, retorna
-      el valor de la posicion del caracter del arreglo */
+      /* Si el caracter de la posicon actual del alfabeto es igual al caracter del mensaje, retorna
+      el valor que tiene la posicion del caracter dentro del alfabeto */
       if ($current_char == $char_message) {
-        return key($given_array);
+        return key($alphabet);
       }
 
-      next($given_array);
+      next($alphabet);
     }
 
   }
 
-  /* Retorna el mensaje convertido en arreglo */
-  function get_array_message($message) {
+  /**
+  * Convierte una cadena de caracteres (string) en un arreglo
+  *
+  * @param string $message contiene el mensaje de entrada encriptado
+  * @return array que contiene todos los caracteres del mensaje de entrada encriptado
+  */
+  function getCharsMessageArray($message) {
     return str_split($message);
   }
 
